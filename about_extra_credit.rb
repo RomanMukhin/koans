@@ -19,8 +19,8 @@ class DiceSet
     dice.sort.uniq.each do |n|
       sc_hash[n] = dice.sort.count{|elem|elem == n }
       if sc_hash[n] 
-        score += sc_hash[n] >= 3 ? Proc.new {sub += 3;  sc_hash[n]-=3 if n == 1; sc_hash[n] = 0 if n == 5; n==1 ? 1000 : n*100 }.call : 0
-        score += sc_hash[n] < 3 && (n == 5 || n == 1) ? Proc.new{ sub+=sc_hash[n]; n==1 ? sc_hash[n]*100 : sc_hash[n]*50 }.call : 0
+        score+= sc_hash[n]>= 3 ? Proc.new{sub += 3; sc_hash[n]-=3 if n == 1; sc_hash[n] = 0 if n == 5; n==1 ? 1000 : n*100}.call : 0
+        score+= sc_hash[n]< 3 &&(n == 5 || n == 1) ? Proc.new{sub+=sc_hash[n]; n==1 ? sc_hash[n]*100 : sc_hash[n]*50}.call : 0
       end
     end
     number-=sub
