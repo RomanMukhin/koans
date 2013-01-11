@@ -14,13 +14,13 @@ class DiceSet
 
   def self.score(dice,number) 
     
-    score, sub, score_hash=0, 0, {}
+    score, sub, sc_hash = 0, 0, {}
     
-    dice.sort.uniq.each do |num|
-      score_hash[num] = dice.sort.count{|elem|elem == num }
-      if score_hash[num] 
-        score += score_hash[num] >=3 ? Proc.new {sub += 3;  score_hash[num]-=3 if num==1; num==1 ? 1000 : num*100 }.call : 0
-        score += score_hash[num] < 3 && (num == 5 || num == 1) ? Proc.new{ sub+=score_hash[num]; num==1 ? score_hash[num]*100 : score_hash[num]*50 }.call : 0
+    dice.sort.uniq.each do |n|
+      sc_hash[n] = dice.sort.count{|elem|elem == n }
+      if sc_hash[n] 
+        score += sc_hash[n] >= 3 ? Proc.new {sub += 3;  sc_hash[n]-=3 if n == 1; sc_hash[n] = 0 if n == 5; n==1 ? 1000 : n*100 }.call : 0
+        score += sc_hash[n] < 3 && (n == 5 || n == 1) ? Proc.new{ sub+=sc_hash[n]; n==1 ? sc_hash[n]*100 : sc_hash[n]*50 }.call : 0
       end
     end
     number-=sub
