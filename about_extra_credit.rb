@@ -16,20 +16,21 @@ class DiceSet
   
     score, sub, sc_hash = 0, 0, {}
     
-    dice.sort.uniq.each do |n|
-      sc_hash[n] = dice.sort.count{|elem|elem == n }
+    dice.uniq.each do |n|
+      sc_hash[n] = dice.count{|elem|elem == n }
       if sc_hash[n] >= 3
         sub += 3
         sc_hash[n] -= 3 if n == 1
         sc_hash[n] = 0 if n == 5
         score += n == 1 ? 1000 : n*100 
-      elsif sc_hash[n] < 3 && (n == 5 || n == 1)
+      end
+      if sc_hash[n] < 3 && (n == 5 || n == 1)
         sub += sc_hash[n]
         score += n == 1 ? sc_hash[n]*100 : sc_hash[n]*50
       end
     end
     
-    number -= sub
+    number-=sub
     number = (number==0 ? 5 : number)
     puts "Your dice #{dice.join("|")} Current result: #{score}\n"
     [number, score]
@@ -83,8 +84,8 @@ class Game
     cycle until @@players.select{|player|player.general_points >= 3000 }.size > 0
     puts "The final round!!!".foo
     cycle :final
-    win_info = players.sort_by{|player| player.general_points }
-    puts "#{win_info[-1].name} with score #{win_info[-1].general_points} is a winner!!!".foo
+    winner = players.max_by{|player| player.general_points }
+    puts "#{winner.name} with score #{winner.general_points} is a winner!!!".foo
   end
 
   def cycle *args
