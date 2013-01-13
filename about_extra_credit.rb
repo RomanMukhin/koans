@@ -1,6 +1,6 @@
 class String
   def foo
-    "\n\t"+("-"*65)+"\n\t\t\t\t"+self+"\n\t"+"-"*65 + "\n"
+    "\n\t" + ("-"*65) + "\n\t\t\t\t" + self + "\n\t" + "-" * 65 + "\n"
   end
 end
 
@@ -8,30 +8,30 @@ class DiceSet
 
   def self.roll(number) 
     values = []
-    number.times{ values<<rand(1..6) }
+    number.times{ values << rand(1..6) }
     values
   end
 
-  def self.score(dice,number) 
+  def self.score(dice, number) 
   
     score, sub, sc_hash = 0, 0, {}
     
     dice.uniq.each do |n|
-      sc_hash[n] = dice.count{|elem|elem == n }
-      if sc_hash[n] >= 3
+      score_hash[n] = dice.count{|elem| elem == n }
+      if score_hash[n] >= 3
         sub += 3
-        sc_hash[n] -= 3 if n == 1
-        sc_hash[n] = 0 if n == 5
-        score += n == 1 ? 1000 : n*100 
+        score_hash[n] -= 3 if n == 1
+        score_hash[n] = 0 if n == 5
+        score += n == 1 ? 1000 : n * 100 
       end
-      if sc_hash[n] < 3 && (n == 5 || n == 1)
-        sub += sc_hash[n]
-        score += n == 1 ? sc_hash[n]*100 : sc_hash[n]*50
+      if score_hash[n] < 3 && ( n == 5 || n == 1 )
+        sub += score_hash[n]
+        score += n == 1 ? score_hash[n] * 100 : score_hash[n] * 50
       end
     end
     
-    number-=sub
-    number = (number==0 ? 5 : number)
+    number -= sub
+    number = (number == 0 ? 5 : number)
     puts "Your dice #{dice.join("|")} Current result: #{score}\n"
     [number, score]
   end
@@ -68,7 +68,7 @@ class Player
         break 
       end
     end until /stop/ =~ $stdin.gets.downcase
-    @general_points += roll_points if (roll_points>=300 || @general_points>0)
+    @general_points += roll_points if (roll_points >= 300 || @general_points > 0)
     puts "Your accumulated points are #{@general_points}".foo
   end
 
@@ -81,7 +81,7 @@ class Game
 
   def initialize *players
     @@players = players
-    cycle until @@players.select{|player|player.general_points >= 3000 }.size > 0
+    cycle until @@players.select{|player| player.general_points >= 3000 }.size > 0
     puts "The final round!!!".foo
     cycle :final
     winner = players.max_by{|player| player.general_points }
