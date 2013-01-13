@@ -38,7 +38,7 @@ class DiceSet
 end
 
 class Player
-  attr_reader :general_points,:name
+  attr_reader :general_points, :name
   
   def initialize(name)
     @skip = 0
