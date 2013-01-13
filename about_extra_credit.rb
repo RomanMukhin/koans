@@ -5,7 +5,7 @@ class String
 end
 
 class DiceSet
-  
+
   def self.roll(number) 
     values = []
     number.times{ values<<rand(1..6) }
@@ -13,22 +13,19 @@ class DiceSet
   end
 
   def self.score(dice,number) 
-    
+  
     score, sub, sc_hash = 0, 0, {}
     
     dice.sort.uniq.each do |n|
       sc_hash[n] = dice.sort.count{|elem|elem == n }
-      if sc_hash[n] 
-        score+= sc_hash[n]>= 3 ? Proc.new{sub += 3; sc_hash[n]-=3 if n == 1; sc_hash[n] = 0 if n == 5; n==1 ? 1000 : n*100}.call : 0
-        score+= sc_hash[n]< 3 &&(n == 5 || n == 1) ? Proc.new{sub+=sc_hash[n]; n==1 ? sc_hash[n]*100 : sc_hash[n]*50}.call : 0
-      end
+      score+= sc_hash[n]>= 3 ? Proc.new{sub += 3; sc_hash[n]-=3 if n == 1; sc_hash[n] = 0 if n == 5; n==1 ? 1000 : n*100}.call : 0
+      score+= sc_hash[n]< 3 &&(n == 5 || n == 1) ? Proc.new{sub+=sc_hash[n]; n==1 ? sc_hash[n]*100 : sc_hash[n]*50}.call : 0
     end
+    
     number-=sub
     number = (number==0 ? 5 : number)
-    
-    puts "Your dice #{dice.join("|")} Result: #{score}\n"
+    puts "Your dice #{dice.join("|")} Current result: #{score}\n"
     [number, score]
-    
   end
 end
 
@@ -50,31 +47,26 @@ class Player
       if @skip == 0 || args[0] == :final
         @quantity_of_dice, points = make_roll
         roll_points += points
-        puts "You have scored in this turn #{roll_points} and your accumulated points are #{@general_points}"
+        puts "You have already scored #{roll_points} points in this turn. Say 'Stop' to end your turn"
         @skip = (points == 0) ? 2 : 0
         
-
         if @skip == 2
           puts "It's pitty... You lost your roll with no points"
           roll_points = 0 
           break
         end
-        puts "Say 'Stop', if you feel that you will loose next roll"
-        break if /stop/ =~ $stdin.gets.downcase
       else
         puts "You skip your turn"
         break 
       end
-    end until points == 0 
-
+    end until /stop/ =~ $stdin.gets.downcase
     @general_points += roll_points if (roll_points>=300 || @general_points>0)
-  
+    puts "Your accumulated points are #{@general_points}".foo
   end
 
   def make_roll
     DiceSet.score(DiceSet.roll(@quantity_of_dice), @quantity_of_dice)
   end
-
 end
 
 class Game
